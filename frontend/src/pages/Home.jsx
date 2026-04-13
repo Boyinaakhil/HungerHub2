@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom' // Import Navigate
-import UserDashboard from '../components/userDashboard' // Check capitalization (userDashboard vs UserDashboard)
+import UserDashboard from '../components/UserDashboard' // Check capitalization (userDashboard vs UserDashboard)
 import OwnerDashboard from '../components/OwnerDashboard'
 import DeliveryBoy from '../components/DeliveryBoy'
 
