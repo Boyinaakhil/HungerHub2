@@ -1,0 +1,6 @@
+Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.
+    at handleResponseNotOk (file:///C:/Users/akhil/OneDrive/Desktop/projects/current/8.vingo/backend/node_modules/@google/generative-ai/dist/index.mjs:432:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async makeRequest (file:///C:/Users/akhil/OneDrive/Desktop/projects/current/8.vingo/backend/node_modules/@google/generative-ai/dist/index.mjs:401:9)
+    at async generateContent (file:///C:/Users/akhil/OneDrive/Desktop/projects/current/8.vingo/backend/node_modules/@google/generative-ai/dist/index.mjs:865:22)
+    at async handleSmartMeal (file:///C:/Users/akhil/OneDrive/Desktop/projects/current/8.vingo/backend/controllers/chatbot.controller.js:73:24)
