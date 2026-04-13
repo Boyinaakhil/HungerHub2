@@ -35,7 +35,7 @@ import useGetItemsByCity from './hooks/useGetItemsByCity'
 import useGetMyOrders from './hooks/useGetMyOrders'
 import useUpdateLocation from './hooks/useUpdateLocation'
 
-export const serverUrl = "http://localhost:8555"
+export const serverUrl = "https://hungerhub-backend-59wx.onrender.com"
 
 function App() {
   const { userData } = useSelector(state => state.user)
