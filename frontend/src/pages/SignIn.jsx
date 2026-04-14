@@ -50,9 +50,10 @@ function SignIn() {
                 }
             } catch (error) {
                 console.error("Redirect Error:", error);
-                if (error.code === 'auth/unauthorized-domain') {
-                    setErr("Unauthorized Domain! Add your local IP to Firebase Console > Authentication > Settings > Authorized Domains.");
-                } else {
+                
+                // Do NOT aggressively show the unauthorized-domain error on simple page loads. 
+                // Wait until they actually click "Sign In with Google" (handleGoogleSignIn) to show domain errors.
+                if (error.code !== 'auth/unauthorized-domain' && error.code !== 'auth/redirect-cancelled-by-user') {
                     setErr("Google Sign-In Error (COOP/COEP or Blocked). Please try again.");
                 }
             }
