@@ -37,29 +37,8 @@ function SignIn() {
            setLoading(false)
         }
      }
-    // Handle Redirect Return on Page Load
-    useEffect(() => {
-        const checkRedirectResult = async () => {
-            try {
-                const result = await getRedirectResult(auth);
-                if (result?.user) {
-                    const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
-                        email: result.user.email,
-                    }, { withCredentials: true });
-                    dispatch(setUserData(data));
-                }
-            } catch (error) {
-                console.error("Redirect Error:", error);
-                
-                // Do NOT aggressively show the unauthorized-domain error on simple page loads. 
-                // Wait until they actually click "Sign In with Google" (handleGoogleSignIn) to show domain errors.
-                if (error.code !== 'auth/unauthorized-domain' && error.code !== 'auth/redirect-cancelled-by-user') {
-                    setErr("Google Sign-In Error (COOP/COEP or Blocked). Please try again.");
-                }
-            }
-        };
-        checkRedirectResult();
-    }, [dispatch]);
+    // Redirect result is now handled globally in App.jsx during the splash screen
+    // to prevent the result from expiring before SignIn.jsx even mounts on mobile.
 
     // Hybrid Google Sign In Logic
     const handleGoogleSignIn = async () => {

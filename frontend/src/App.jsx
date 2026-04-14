@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { io } from 'socket.io-client'
-import { setSocket } from './redux/userSlice'
+import { setSocket, setUserData } from './redux/userSlice'
+import { auth } from '../firebase'
+import { getRedirectResult } from 'firebase/auth'
+import axios from 'axios'
 
 // Pages
 import SignUp from './pages/SignUp'
@@ -68,6 +71,35 @@ function App() {
       socketInstance.disconnect()
     }
   }, [userData?._id])
+
+  // --- GOOGLE MOBILE REDIRECT RESULT HANDLER ---
+  // MUST run immediately on mount (before splash finishes) to catch the
+  // Firebase redirect result that arrives on page reload after Google auth.
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          // Redirect result found! Skip splash immediately.
+          setIsSplashVisible(false);
+          setIsFullyUnmounted(true);
+
+          const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
+            email: result.user.email,
+          }, { withCredentials: true });
+          dispatch(setUserData(data));
+        }
+      } catch (error) {
+        console.error("[App] Redirect result error:", error);
+        // If there's a Firebase domain error, still skip splash so user sees the login page error.
+        if (error.code === 'auth/unauthorized-domain') {
+          setIsSplashVisible(false);
+          setIsFullyUnmounted(true);
+        }
+      }
+    };
+    handleRedirectResult();
+  }, []);
 
   useEffect(() => {
      // Splash screen logic (Zomato-style)
