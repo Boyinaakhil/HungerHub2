@@ -68,20 +68,15 @@ function SignIn() {
     // Hybrid Google Sign In Logic
     const handleGoogleSignIn = async () => {
         const provider = new GoogleAuthProvider();
-        const isMobile = window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent);
 
         try {
-            if (isMobile) {
-                // Mobile: Use Redirect Flow to avoid popup/session blockers
-                await signInWithRedirect(auth, provider);
-            } else {
-                // Desktop: Keep using Popup Flow
+
                 const result = await signInWithPopup(auth, provider);
                 const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
                     email: result.user.email,
                 }, { withCredentials: true });
                 dispatch(setUserData(data));
-            }
+            
         } catch (error) {
             console.error("Popup Error:", error);
             if (error.code === 'auth/unauthorized-domain') {
