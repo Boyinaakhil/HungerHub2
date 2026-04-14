@@ -24,30 +24,6 @@ function SignIn() {
     const [loading,setLoading]=useState(false)
     const dispatch=useDispatch()
 
-    useEffect(() => {
-    const handleRedirectData = async () => {
-        try {
-            const result = await getRedirectResult(auth);
-            if (result) {
-                // This block runs ONLY after returning from Google Redirect
-                const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
-                    email: result.user.email,
-                    fullName: result.user.displayName, // Fixes your previous fullName error
-                }, { withCredentials: true });
-                
-                dispatch(setUserData(data));
-                // Optional: Redirect user to home/dashboard here
-            }
-        } catch (error) {
-            console.error("Redirect Result Error:", error);
-            setErr("Failed to complete sign-in after redirect.");
-        }
-    };
-
-    handleRedirectData();
-}, [dispatch]);
-
-
      const handleSignIn=async () => {
         setLoading(true)
         try {
