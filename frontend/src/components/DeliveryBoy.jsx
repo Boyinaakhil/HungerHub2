@@ -140,13 +140,13 @@ function DeliveryBoy() {
   const sendOtp = async (orderId, shopOrderId, mobileNumber) => {
     setLoadingOrders(prev => ({ ...prev, [orderId]: true }))
     try {
-        await axios.post(`${serverUrl}/api/order/send-delivery-otp`, {
+        const result = await axios.post(`${serverUrl}/api/order/send-delivery-otp`, {
             orderId, shopOrderId
         }, { withCredentials: true })
         
         setLoadingOrders(prev => ({ ...prev, [orderId]: false }));
         setOtpVisible(prev => ({ ...prev, [orderId]: true }));
-        alert("OTP sent successfully to the student's registered email.");
+        alert(result.data?.message || "OTP sent successfully to the student's registered email.");
 
     } catch (error) {
         console.error("OTP Send Error:", error);

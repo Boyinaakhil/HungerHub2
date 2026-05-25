@@ -64,12 +64,14 @@ export const placeOrder = async (req, res) => {
 
         let walletDeduction = 0;
 
-        if (isOnLeave) {
-            // 🛑 USER IS ON LEAVE: FORCE 0 POINT USAGE
+        const isGeneralUser = user.role === 'user';
+
+        if (isOnLeave || isGeneralUser) {
+            // 🛑 USER IS ON LEAVE OR IS GENERAL USER: FORCE 0 POINT USAGE
             walletDeduction = 0; 
             // We do NOT stop the function here. We just ensure points aren't used.
         } else {
-            // ✅ NORMAL FLOW: Calculate Point Deduction
+            // ✅ NORMAL FLOW (Students): Calculate Point Deduction
             const remainingLimit = Math.max(0, limit - used);
             walletDeduction = Math.min(foodBasePrice, remainingLimit);
 
@@ -81,8 +83,8 @@ export const placeOrder = async (req, res) => {
         const finalOrderTotal = foodBasePrice + deliveryFee;
         const finalPayableAmount = finalOrderTotal - walletDeduction; // If on leave, payable = total
 
-        // --- 3. UPDATE USER WALLET (Only if not on leave) ---
-        if (!isOnLeave) {
+        // --- 3. UPDATE USER WALLET (Only if not on leave & not general user) ---
+        if (!isOnLeave && !isGeneralUser) {
             user.walletBalance = (user.walletBalance || 0) - walletDeduction;
 
             if (type === 'breakfast') user.subscription.breakfastUsed += walletDeduction;
