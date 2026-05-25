@@ -9,7 +9,7 @@ import userRouter from "./routes/user.routes.js"
 import itemRouter from "./routes/item.routes.js"
 import shopRouter from "./routes/shop.routes.js"
 import orderRouter from "./routes/order.routes.js"
-import adminRouter from "./routes/admin.routes.js" 
+import adminRouter from "./routes/admin.routes.js"
 import chatbotRouter from "./routes/chatbot.routes.js"
 import http from "http"
 import { Server } from "socket.io"
@@ -19,9 +19,17 @@ import { startCronJobs } from "./utils/cronJob.js"
 const app = express()
 const server = http.createServer(app)
 
+const allowedOrigins = [
+    "https://hungerhub-05l1.onrender.com",
+    "http://localhost:5173",
+    "capacitor://localhost",
+    "http://localhost",
+    "http://192.168.1.100:5173", // Example local IP, would be better to use * for development or a more robust dynamic list
+];
+
 const io = new Server(server, {
     cors: {
-        origin: "https://hungerhub-05l1.onrender.com",
+        origin: allowedOrigins,
         credentials: true,
         methods: ['POST', 'GET']
     }
@@ -29,10 +37,16 @@ const io = new Server(server, {
 
 app.set("io", io)
 
-const port = process.env.PORT || 8000 
+const port = process.env.PORT || 8000
 
 app.use(cors({
-    origin: "https://hungerhub-05l1.onrender.com",
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }))
 app.use(express.json())
